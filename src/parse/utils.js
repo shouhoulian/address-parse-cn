@@ -3,7 +3,7 @@
  * MIT License
  * By www.asseek.com
  */
-import AREA from '../area';
+import AREA from "./area";
 
 /**
  * 通过地区编码返回省市区对象
@@ -15,9 +15,9 @@ function getAreaByCode(code) {
     cCode = `${code.slice(0, 4)}00`;
   return {
     code: code,
-    province: AREA.province_list[pCode] || '',
-    city: AREA.city_list[cCode] || '',
-    area: AREA.area_list[code] || '',
+    province: AREA.province_list[pCode] || "",
+    city: AREA.city_list[cCode] || "",
+    area: AREA.area_list[code] || "",
   };
 }
 
@@ -31,20 +31,20 @@ function getTargetParentAreaListByCode(target, code) {
   const result = [];
   result.unshift({
     code,
-    name: AREA.area_list[code] || '',
+    name: AREA.area_list[code] || "",
   });
-  if (['city', 'province'].includes(target)) {
-    code = code.slice(0, 4) + '00';
+  if (["city", "province"].includes(target)) {
+    code = code.slice(0, 4) + "00";
     result.unshift({
       code,
-      name: AREA.city_list[code] || '',
+      name: AREA.city_list[code] || "",
     });
   }
-  if (target === 'province') {
-    code = code.slice(0, 2) + '0000';
+  if (target === "province") {
+    code = code.slice(0, 2) + "0000";
     result.unshift({
       code,
-      name: AREA.province_list[code] || '',
+      name: AREA.province_list[code] || "",
     });
   }
   return result;
@@ -61,18 +61,21 @@ function getTargetParentAreaListByCode(target, code) {
 function getTargetAreaListByCode(target, code, parent) {
   if (parent) return getTargetParentAreaListByCode(target, code);
   let result = [];
-  let list = AREA[{
-    city: 'city_list',
-    area: 'area_list',
-  }[target]];
+  let list =
+    AREA[
+      {
+        city: "city_list",
+        area: "area_list",
+      }[target]
+    ];
   if (code && list) {
     code = code.toString();
     let provinceCode = code.slice(0, 2);
     let cityCode = code.slice(2, 4);
-    if (target === 'area' && cityCode !== '00') {
+    if (target === "area" && cityCode !== "00") {
       code = `${provinceCode}${cityCode}`;
       for (let j = 0; j < 100; j++) {
-        let _code = `${code}${j < 10 ? '0' : ''}${j}`;
+        let _code = `${code}${j < 10 ? "0" : ""}${j}`;
         if (list[_code]) {
           result.push({
             code: _code,
@@ -81,10 +84,13 @@ function getTargetAreaListByCode(target, code, parent) {
         }
       }
     } else {
-      for (let i = 0; i < 91; i++) {  //最大city编码只到91
+      for (let i = 0; i < 91; i++) {
+        //最大city编码只到91
         //只有city跟area
-        code = `${provinceCode}${i < 10 ? '0' : ''}${i}${target === 'city' ? '00' : ''}`;
-        if (target === 'city') {
+        code = `${provinceCode}${i < 10 ? "0" : ""}${i}${
+          target === "city" ? "00" : ""
+        }`;
+        if (target === "city") {
           if (list[code]) {
             result.push({
               code,
@@ -93,7 +99,7 @@ function getTargetAreaListByCode(target, code, parent) {
           }
         } else {
           for (let j = 0; j < 100; j++) {
-            let _code = `${code}${j < 10 ? '0' : ''}${j}`;
+            let _code = `${code}${j < 10 ? "0" : ""}${j}`;
             if (list[_code]) {
               result.push({
                 code: _code,
@@ -123,13 +129,13 @@ function getTargetAreaListByCode(target, code, parent) {
  * @param area
  * @returns {{code: string, province: string, city: string, area: string}}
  */
-function getAreaByAddress({province, city, area}) {
-  const {province_list, city_list, area_list} = AREA;
+function getAreaByAddress({ province, city, area }) {
+  const { province_list, city_list, area_list } = AREA;
   const result = {
-    code: '',
-    province: '',
-    city: '',
-    area: '',
+    code: "",
+    province: "",
+    city: "",
+    area: "",
   };
   for (let _code in province_list) {
     let _province = province_list[_code];
@@ -172,7 +178,8 @@ function getAreaByAddress({province, city, area}) {
  * @returns {number}
  */
 function strLen(str) {
-  let l = str.length, len = 0;
+  let l = str.length,
+    len = 0;
   for (let i = 0; i < l; i++) {
     len += (str.charCodeAt(i) & 0xff00) !== 0 ? 2 : 1;
   }
@@ -181,7 +188,8 @@ function strLen(str) {
 
 const Reg = {
   mobile: /(86-[1][3-9][0-9]{9})|(86[1][3-9][0-9]{9})|([1][3-9][0-9]{9})/g,
-  phone: /(([0-9]{3,4}-)[0-9]{7,8})|([0-9]{12})|([0-9]{11})|([0-9]{10})|([0-9]{9})|([0-9]{8})|([0-9]{7})/g,
+  phone:
+    /(([0-9]{3,4}-)[0-9]{7,8})|([0-9]{12})|([0-9]{11})|([0-9]{10})|([0-9]{9})|([0-9]{8})|([0-9]{7})/g,
   zipCode: /([0-9]{6})/g,
 };
 
@@ -200,7 +208,7 @@ function shortIndexOf(address, shortName, name) {
       }
     }
   }
-  return {index, matchName};
+  return { index, matchName };
 }
 
 const Utils = {
