@@ -1,6 +1,6 @@
 {
   "name": "address-parse-cn",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ww 测试",
   "main": "dist/parse/index.js",
   "devDependencies": {
@@ -30,10 +30,10 @@
     "build_test": "npm run build && npm run test",
     "build-web": "webpack --config ./build/webpack.config.js"
   },
-  "homepage": "https://github.com/akebe/address-parse",
+  "homepage": "https://github.com/shouhoulian/address-parse-cn.git",
   "repository": {
     "type": "git",
-    "url": "git@github.com:akebe/address-parse.git"
+    "url": "git@github.com:akebe/shouhoulian/address-parse-cn.git"
   },
   "license": "MIT"
 }
