@@ -3,18 +3,37 @@
  * MIT License
  * By www.asseek.com
  */
-import AREA from '../area';
-import Utils from './utils';
-import ParseArea from './parse-area';
+import AREA from "./area";
+import Utils from "./utils";
+import ParseArea from "./parse-area";
 
 class ParseAddress {
-
-  static ExcludeKeys = ['发件人', '收货地址', '收货人', '收件人', '收货', '手机号码', '邮编', '电话', '所在地区', '详细地址', '地址', '：', ':', '；', ';', '，', ',', '。', '、'];
+  static ExcludeKeys = [
+    "发件人",
+    "收货地址",
+    "收货人",
+    "收件人",
+    "收货",
+    "手机号码",
+    "邮编",
+    "电话",
+    "所在地区",
+    "详细地址",
+    "地址",
+    "：",
+    ":",
+    "；",
+    ";",
+    "，",
+    ",",
+    "。",
+    "、",
+  ];
 
   static ParseArea = new ParseArea();
 
   static Reg = {
-    ...Utils.Reg
+    ...Utils.Reg,
   };
 
   constructor(address) {
@@ -33,9 +52,9 @@ class ParseAddress {
     let results = [];
     if (address) {
       this.result = {
-        mobile: '',
-        zip_code: '',
-        phone: ''
+        mobile: "",
+        zip_code: "",
+        phone: "",
       };
 
       this.address = address;
@@ -43,26 +62,26 @@ class ParseAddress {
       this.parseMobile();
       this.parsePhone();
       this.parseZipCode();
-      this.address = this.address.replace(/ {2,}/, ' ');
-      const firstName = ParseAddress.parseName({details: this.address});
+      this.address = this.address.replace(/ {2,}/, " ");
+      const firstName = ParseAddress.parseName({ details: this.address });
 
       results = ParseAddress.ParseArea.parse(this.address, parseAll);
 
       for (let result of results) {
         Object.assign(result, this.result);
         result.name = result.name.trim();
-        ParseAddress.parseName(result, {firstName});
+        ParseAddress.parseName(result, { firstName });
         ParseAddress.handlerDetail(result);
       }
       if (!results.length) {
         let result = Object.assign(this.result, {
-          province: '',
-          city: '',
-          area: '',
+          province: "",
+          city: "",
+          area: "",
           details: this.address,
-          name: '',
-          code: '',
-          __type: ''
+          name: "",
+          code: "",
+          __type: "",
         });
         ParseAddress.parseName(result);
         results.push(result);
@@ -76,12 +95,17 @@ class ParseAddress {
    * 替换无效字符
    */
   replace() {
-    let {address} = this;
+    let { address } = this;
     for (let key of ParseAddress.ExcludeKeys) {
-      address = address.replace(new RegExp(key, 'g'), ' ');
+      address = address.replace(new RegExp(key, "g"), " ");
     }
-    this.address = address.replace(/\r\n/g, ' ').replace(/\n/g, ' ').replace(/\t/g, ' ').replace(/ {2,}/g, ' ')
-      .replace(/(\d{3})-(\d{4})-(\d{4})/g, '$1$2$3').replace(/(\d{3}) (\d{4}) (\d{4})/g, '$1$2$3');
+    this.address = address
+      .replace(/\r\n/g, " ")
+      .replace(/\n/g, " ")
+      .replace(/\t/g, " ")
+      .replace(/ {2,}/g, " ")
+      .replace(/(\d{3})-(\d{4})-(\d{4})/g, "$1$2$3")
+      .replace(/(\d{3}) (\d{4}) (\d{4})/g, "$1$2$3");
   }
 
   /**
@@ -92,7 +116,7 @@ class ParseAddress {
     const mobile = ParseAddress.Reg.mobile.exec(this.address);
     if (mobile) {
       this.result.mobile = mobile[0];
-      this.address = this.address.replace(mobile[0], ' ');
+      this.address = this.address.replace(mobile[0], " ");
     }
   }
 
@@ -104,7 +128,7 @@ class ParseAddress {
     const phone = ParseAddress.Reg.phone.exec(this.address);
     if (phone) {
       this.result.phone = phone[0];
-      this.address = this.address.replace(phone[0], ' ');
+      this.address = this.address.replace(phone[0], " ");
     }
   }
 
@@ -116,7 +140,7 @@ class ParseAddress {
     const zip = ParseAddress.Reg.zipCode.exec(this.address);
     if (zip) {
       this.result.zip_code = zip[0];
-      this.address = this.address.replace(zip[0], '');
+      this.address = this.address.replace(zip[0], "");
     }
   }
 
@@ -126,17 +150,21 @@ class ParseAddress {
    * @param maxLen 字符串占位 比这个数值短才识别为姓名 汉字2位英文1位
    * @param firstName 最初切分地址识别到的name
    */
-  static parseName(result, {maxLen = 11, firstName} = {}) {
+  static parseName(result, { maxLen = 11, firstName } = {}) {
     if (!result.name || Utils.strLen(result.name) > 15) {
-      const list = result.details.split(' ');
+      const list = result.details.split(" ");
       const name = {
-        value: '',
-        index: -1
+        value: "",
+        index: -1,
       };
       if (list.length > 1) {
         let index = 0;
         for (const v of list) {
-          if (v && !name.value || v && Utils.strLen(name.value) > Utils.strLen(v) || firstName && v === firstName) {
+          if (
+            (v && !name.value) ||
+            (v && Utils.strLen(name.value) > Utils.strLen(v)) ||
+            (firstName && v === firstName)
+          ) {
             name.value = v;
             name.index = index;
             if (firstName && v === firstName) break;
@@ -147,7 +175,7 @@ class ParseAddress {
       if (name.value) {
         result.name = name.value;
         list.splice(name.index, 1);
-        result.details = list.join(' ').trim();
+        result.details = list.join(" ").trim();
       }
     }
     return result.name;
@@ -159,7 +187,7 @@ class ParseAddress {
    */
   static handlerDetail(result) {
     if (result.details.length > 5) {
-      const ary = ['province', 'city', 'area'];
+      const ary = ["province", "city", "area"];
       for (const key of ary) {
         const index = result.details.indexOf(result[key]);
         if (index !== 0) continue;
@@ -167,14 +195,8 @@ class ParseAddress {
       }
     }
   }
-
 }
 
-export {
-  ParseAddress,
-  AREA,
-  Utils
-};
+export { ParseAddress, AREA, Utils };
 
 export default new ParseAddress();
-
