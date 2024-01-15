@@ -11,7 +11,7 @@
 
 ### Start
 ````
-import AddressParse from 'address-parse';
+import AddressParse from 'address-parse-cn';
 
 const [result] = AddressParse.parse('福建省福州市福清市石竹街道义明综合楼3F，15000000000，asseek');
 console.log(result);
@@ -42,7 +42,7 @@ console.log(result, results);
 ````
 包内暴露了地址数据对象`AREA`和工具函数对象`Utils`
 ````
-import AddressParse, {AREA, Utils} from 'address-parse';
+import AddressParse, {AREA, Utils} from 'address-parse-cn';
 
 const {
   province_list,  // 以地区编码为键名的省份对象
@@ -86,6 +86,6 @@ Utils.Reg. //mobile phone zipCode
 ### 组件库
  [element-address](https://github.com/akebe/element-address)  
  基于 [address-parse](https://github.com/akebe/address-parse) 通过 [element-ui](https://github.com/ElemeFE/element) 实现的即开即用地址类组件库
- 
+
 ### LICENSE
 [MIT](https://en.wikipedia.org/wiki/MIT_License)
