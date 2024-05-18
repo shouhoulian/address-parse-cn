@@ -173,6 +173,7 @@ class ParseArea {
 
     // 正向解析
     this.results.unshift(...ParseArea.parseByProvince(address));
+
     if (parseAll || !this.results[0] || !this.results[0].__parse) {
       // 逆向城市解析  通过所有CityShort匹配
       this.results.unshift(...ParseArea.parseByCity(address));
@@ -182,6 +183,7 @@ class ParseArea {
       }
     }
 
+    // console.log(666, this.results);
     // __parse结果改为数值类型
     if (this.results.length > 1) {
       for (const result of this.results) {
@@ -290,6 +292,7 @@ class ParseArea {
         if (_address.charAt(0) !== "市" || _address.indexOf(province) > -1) {
           address = _address;
         }
+
         //如果是用短名匹配的 要替换省关键字
         if (shortProvince) {
           for (let key of ProvinceKeys) {
@@ -337,6 +340,7 @@ class ParseArea {
     if (result.code) {
       results.unshift({ ...result, details: address.trim() });
     }
+
     return results;
   }
 

@@ -13,7 +13,7 @@ class ParseAddress {
     "收货地址",
     "收货人",
     "收件人",
-    "收货",
+    // "收货",
     "手机号码",
     "邮编",
     "电话",
@@ -58,23 +58,29 @@ class ParseAddress {
       };
 
       this.address = address;
+      // console.log(111, this.address);
+
       this.replace();
+      // console.log(222, this.address);
       this.parseMobile();
+      // console.log(333, this.address);
       this.parsePhone();
+      // console.log(444, this.address);
       this.parseZipCode();
-      this.address = this.address.replace(/ {2,}/, " ");
+      // console.log(555, this.address);
+      // this.address = this.address.replace(/ {2,}/, " ");
       const firstName = ParseAddress.parseName({ details: this.address });
 
       results = ParseAddress.ParseArea.parse(this.address, parseAll);
 
-      for (let result of results) {
+      for (const result of results) {
         Object.assign(result, this.result);
         result.name = result.name.trim();
         ParseAddress.parseName(result, { firstName });
         ParseAddress.handlerDetail(result);
       }
       if (!results.length) {
-        let result = Object.assign(this.result, {
+        const result = Object.assign(this.result, {
           province: "",
           city: "",
           area: "",
@@ -96,7 +102,7 @@ class ParseAddress {
    */
   replace() {
     let { address } = this;
-    for (let key of ParseAddress.ExcludeKeys) {
+    for (const key of ParseAddress.ExcludeKeys) {
       address = address.replace(new RegExp(key, "g"), " ");
     }
     this.address = address
@@ -125,7 +131,9 @@ class ParseAddress {
    */
   parsePhone() {
     ParseAddress.Reg.phone.lastIndex = 0;
+    // console.log(this.address);
     const phone = ParseAddress.Reg.phone.exec(this.address);
+    // console.log(phone);
     if (phone) {
       this.result.phone = phone[0];
       this.address = this.address.replace(phone[0], " ");
