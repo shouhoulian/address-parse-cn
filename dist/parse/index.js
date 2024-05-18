@@ -28,7 +28,9 @@ var _parseArea = _interopRequireDefault(require("./parse-area"));
  */
 
 class ParseAddress {
-  static ExcludeKeys = ["发件人", "收货地址", "收货人", "收件人", "收货", "手机号码", "邮编", "电话", "所在地区", "详细地址", "地址", "：", ":", "；", ";", "，", ",", "。", "、"];
+  static ExcludeKeys = ["发件人", "收货地址", "收货人", "收件人",
+  // "收货",
+  "手机号码", "邮编", "电话", "所在地区", "详细地址", "地址", "：", ":", "；", ";", "，", ",", "。", "、"];
   static ParseArea = new _parseArea.default();
   static Reg = {
     ..._utils.default.Reg
@@ -54,16 +56,22 @@ class ParseAddress {
         phone: ""
       };
       this.address = address;
+      // console.log(111, this.address);
+
       this.replace();
+      // console.log(222, this.address);
       this.parseMobile();
+      // console.log(333, this.address);
       this.parsePhone();
+      // console.log(444, this.address);
       this.parseZipCode();
-      this.address = this.address.replace(/ {2,}/, " ");
+      // console.log(555, this.address);
+      // this.address = this.address.replace(/ {2,}/, " ");
       const firstName = ParseAddress.parseName({
         details: this.address
       });
       results = ParseAddress.ParseArea.parse(this.address, parseAll);
-      for (let result of results) {
+      for (const result of results) {
         Object.assign(result, this.result);
         result.name = result.name.trim();
         ParseAddress.parseName(result, {
@@ -72,7 +80,7 @@ class ParseAddress {
         ParseAddress.handlerDetail(result);
       }
       if (!results.length) {
-        let result = Object.assign(this.result, {
+        const result = Object.assign(this.result, {
           province: "",
           city: "",
           area: "",
@@ -95,7 +103,7 @@ class ParseAddress {
     let {
       address
     } = this;
-    for (let key of ParseAddress.ExcludeKeys) {
+    for (const key of ParseAddress.ExcludeKeys) {
       address = address.replace(new RegExp(key, "g"), " ");
     }
     this.address = address.replace(/\r\n/g, " ").replace(/\n/g, " ").replace(/\t/g, " ").replace(/ {2,}/g, " ").replace(/(\d{3})-(\d{4})-(\d{4})/g, "$1$2$3").replace(/(\d{3}) (\d{4}) (\d{4})/g, "$1$2$3");
@@ -118,7 +126,9 @@ class ParseAddress {
    */
   parsePhone() {
     ParseAddress.Reg.phone.lastIndex = 0;
+    // console.log(this.address);
     const phone = ParseAddress.Reg.phone.exec(this.address);
+    // console.log(phone);
     if (phone) {
       this.result.phone = phone[0];
       this.address = this.address.replace(phone[0], " ");
