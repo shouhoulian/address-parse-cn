@@ -34,6 +34,7 @@ test("详细地址带电话号码", () => {
     "余哲江，17723431776，陕西省 咸阳市 渭城区 北杜街道 丰树空港新城物流园5号库A库 0731-12345614",
     false
   );
+  console.log(result);
   expect(result[0]["details"]).toEqual("北杜街道 丰树空港新城物流园5号库A库");
   expect(result[0]["phone"]).toEqual("0731-12345614");
 });
