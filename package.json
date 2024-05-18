@@ -1,6 +1,6 @@
 {
   "name": "address-parse-cn",
-  "version": "2.0.1",
+  "version": "2.3.0",
   "description": "中文地址解析，更新到2023年，解决直辖县等问题",
   "main": "dist/parse/index.js",
   "devDependencies": {
